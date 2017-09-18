@@ -9,9 +9,9 @@
 </head>
 
 <body>
+    @@include('indexheader.inc')
     <div class="index-wrapper">
-        <header>我是header<a href="./main.html">main链接</a></header>
-        <main>我是main</main>
+        <main>我是main<a href="./main.html">main链接</a></main>
         <footer>我是footer</footer>
     </div>
     <!-- 为何要处理成2个js 的原因是 reset 是初始化的js 一个网站中每个页面都需要，如果合并到每个页面中中去的情况下那么就不能利用浏览器的缓存，如果将所有页面的js都合并到一起有一个问题就是不能按需加载 所以这里我处理的方式选择为每个页面中都需要的我提出来 然后不同的地方每个页面合并成1个js -->

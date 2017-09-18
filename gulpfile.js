@@ -1,8 +1,11 @@
 var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
-var rename = require('gulp-rename');
-var gutil = require('gulp-util');
+var uglify = require('gulp-uglify'); //压缩代码
+var concat = require('gulp-concat'); //合并为一个代码
+var rename = require('gulp-rename'); //重命名
+var gutil = require('gulp-util'); //工具
+var fileinclude = require('gulp-file-include'); //.inc解析
+var md5 = require('gulp-md5-plus'); //md5
+
 
 var pug = require('gulp-pug');
 var sass = require('gulp-sass');
@@ -28,14 +31,20 @@ gulp.task('css', function() {
         .pipe(sass()) //sass 处理
         .pipe(minifyCSS()) //压缩 css
         .pipe(concat('all.min.css')) // 合并为在一个css
+        .pipe(md5(10, path.build + 'html/*.html'))
         .pipe(gulp.dest(path.build + '/css/')); //拷贝css 到一个目录
 });
 // html
 gulp.task('html', function() {
     gulp.src(path.html + '*.html')
-        .pipe(pug()) //处理模板
-        .pipe(gulpminify()) //压缩html
+        .pipe(fileinclude({
+            prefix: '@@',
+            basepath: '@file'
+        }))
+        // .pipe(pug()) //处理模板
+        // .pipe(gulpminify()) //压缩html
         .pipe(gulp.dest(path.build + '/html/'));
+    // .on('end', done);
 });
 // js
 gulp.task('js', function() {
@@ -67,6 +76,7 @@ gulp.task('js', function() {
         }))
         .pipe(uglify()) //处理压缩
         .on('error', function(err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
+        .pipe(md5(10, path.build + 'html/*.html'))
         .pipe(gulp.dest(path.build + '/js/'));
 });
 // 运行所有
